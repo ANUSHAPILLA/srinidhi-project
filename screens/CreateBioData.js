@@ -54,6 +54,14 @@ export default class CreateBioData extends Component {
       fontsLoaded: false,
       previewImage: "image_1",
       dropdownHeight: 40,
+      name:"",
+      experience:"",
+      age:"",
+      category:"",
+      gender:"",
+      hobbies:"",
+      country:""
+
     };
   }
 
@@ -66,20 +74,22 @@ export default class CreateBioData extends Component {
     this._loadFontsAsync();
   }
 
-  async addStory() {
+  async addBio() {
     if (
-      this.state.title &&
-      this.state.description &&
-      this.state.story &&
-      this.state.moral
+      this.state.name &&
+      this.state.age &&
+      this.state.experience &&
+      this.state.category && this.state.hobbies && this.state.gender && this.state.country
     ) {
       var d = new Date();
       let storyData = {
-        preview_image: this.state.previewImage,
-        title: this.state.title,
-        description: this.state.description,
-        story: this.state.story,
-        moral: this.state.moral,
+        name:this.state.name,
+        age:this.state.age,
+        experience:this.state.experience,
+        category:this.state.category,
+        hobbies:this.state.hobbies,
+        gender:this.state.gender,
+        country:this.state.country,
         created_on: d.toString(),
         author_uid: uid,
         likes: 0,
@@ -101,38 +111,8 @@ export default class CreateBioData extends Component {
       );
     }
   }
-  handleDocumentSelection = async () => {
-    const result = await DocumentPicker.getDocumentAsync({});
-    if (result.type === "success") {
-      console.log(result.uri);
-      this.setState({ audio: result.uri });
-      this.uploadSong(this.state.audio);
-    }
-  };
-  uploadSong = async (uri) => {
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function (e) {
-        console.log(e);
-        reject(new TypeError("network failed"));
-      };
-      xhr.responseType = "blob";
-      xhr.open("GET", uri, true);
-      xhr.send(null);
-    });
-    try {
-      const storage = getStorage();
-      const storageRef = aref(storage, `songs/song-${uid}`);
-      uploadBytes(storageRef, blob).then((snapshot) => {
-        console.log("uploadbytes");
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+ 
+  
   render() {
     if (this.state.fontsLoaded) {
       SplashScreen.hideAsync();
@@ -243,11 +223,7 @@ export default class CreateBioData extends Component {
               />
               <View style={styles.submitButton}>
                 <Button
-                  title="upload audio 📑"
-                  onPress={() => this.handleDocumentSelection()}
-                />
-                <Button
-                  onPress={() => this.addStory()}
+                  onPress={() => this.addBio()}
                   title="Submit"
                   color="#841584"
                 />
